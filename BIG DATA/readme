@@ -1,0 +1,36 @@
+1.Create a cluster and go to the jumphost.
+	./create_cluster.sh
+
+2.Boostthe cluster using below(add 12 nodes)
+	./boost_cluster.sh
+	
+3.Uploadthe executable jar file into the cluster using Hue browser.
+	drag and drop the ASSIGNMENT.jar to /user/<name>/
+	
+4.Copy the jarfile to the hadoop folder using below command.
+	hadoop fs -copyToLocal /user/<name>/ASSIGNMENT.jar /home/hadoop/
+	
+5.Copy the input file from AWS data repository using below command.
+	hadoop distcp s3a://nyc-tlc/trip\ data/fhv_tripdata_2018-01.csv /user/<name>/
+
+
+6.Execute the jar file using the below command.(file size 1.3 gb)
+	hadoop jar /home/hadoop/ASSIGNMENT.jar /user/<name>/fhv_tripdata_2018-01.csv /user/<name>/OUTPUT1.3GB /home/hadoop
+	
+7.Optional step:Repeat step 5 to add more data tothe yuser folder.(scaling option-increase file size)
+	dataset name:	fhv_tripdata_2018-01.csv
+					fhv_tripdata_2018-02.csv
+					fhv_tripdata_2018-03.csv
+					fhv_tripdata_2018-04.csv
+8.Optional step: Combine all the dataset created in step 7 using the below commands.
+	merge two files 
+	hdfs dfs -getmerge /user/<name>/fhv_tripdata_2018-01.csv /user/<name>/fhv_tripdata_2018-02.csv /tmp/input.csv
+
+	copy the merged file to user folder 
+	hdfs dfs -put /tmp/input.csv /user/<name>/
+
+9.Repeat step 6 to execute the jar file with merged data and compare the performance.
+	
+10.Output will be available at /user/<name>/OUTPUT1.3GB .
+
+<The zip file contains input downloaded file from aws>
